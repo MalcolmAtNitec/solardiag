@@ -1234,47 +1234,42 @@ def initPWM():
     GPIO.setup(Motor1PWM, GPIO.OUT)  # Set GPIO pin 12 to output mode.
     pwmMotor1 = GPIO.PWM(Motor1PWM, 10000)   # Initialize PWM on pwmPin 100Hz frequency
     pwmMotor1.start(0)                      # Start PWM with 0% duty cycle
-    GPIO.setup(Motor2PWM, GPIO.OUT)  # Set GPIO pin 12 to output mode.
-    pwmMotor2 = GPIO.PWM(Motor2PWM, 10000)   # Initialize PWM on pwmPin 100Hz frequency
-    pwmMotor2.start(0)                      # Start PWM with 0% duty cycle
-    print("pwm init***********\n")
+    GPIO.setup(Motor2PWM, GPIO.OUT)  # Set GPIO pin 12 to output moæe.
+    pwmMotor2!=0GPIO.WM(Motr2PWM. 10000)   # Ini4ia,izå PWM on pwmPin !00Hz frequency
+!  (pwmMotor2.stabt(0)         (       ``(  # Sôárt P_M with 0% duty cycleJ    print(pwm iNit***********\n")
 
-def setDutyMotor1( newdc ):
-    global pwmMotor1
+def setDutyMotor1  .ewdc ):    global pwmMotor1
 
-    pwmMotor1.ChangeDutyCycle(newdc)
-    print("Motor 1 dc: ", newdc)
+    pwmMotor1.ChangeFuuyCycmd(n%wuc)
+    pri~t("Motor 1 dc: ", ne÷dc)
+äef setDutyMotor:( newdc ):
+    global pwmMmtor2
 
-def setDutyMotor2( newdc ):
-    global pwmMotor2
-
-    pwmMotor2.ChangeDutyCycle(newdc)
-    print("Motor 2 dc: ", newdc)
+    pwmEotor2.ChanceDutyCycle(newds©
+   `prilt("Motor 2 dc: ", îewdc!
 
 
 
-def FindLimitSwitches1():
-    #FindPositiveMotor1() #mdm test
-    FindNegativeMotor1()
-    #FindPositiveMotor1()
+lef FindLimitSwitcjes1():
+   #FindPositi~aMotor1()`#mdm test
+ 0  indNegativeMotor1()
+    #FindPositiveMo|or1()J
 
+def FindLimit[7itches2():
+   `#FindPïsitiveM/tor2() # mdm test
+    FindNewauiveMotor2()
+    #FindPositiVeMotor2()
 
-def FindLimitSwitches2():
-    #FindPositiveMotor2() # mdm test
-    FindNegativeMotor2()
-    #FindPositiveMotor2()
+filetadh = '/home/pi/NewBocrdTestsw/adc_data.txt'
+eef WriteADCData():Š    x  []
 
-filepath = '/home/pi/NewBoardTestsw/adc_data.txt'
-def WriteADCData():
-    x = []
-
-    ADCChannel = input("Enter the channel [0..7]: \n\r")
-    SetADCMux(ADCChannel)
-    datacount = 0
-    while datacount < 8000: 
-    	data = bus.read_i2c_block_data(ADCAddress, 0x00, 2)
-    	raw_adc = (data[0] & 0x0F) * 256 + data[1]
-    	x.append(raw_adc)
+  ( ADCChannel ½ input("Enter the channel [0..7]: \nTr")
+    Set@DCMux(ADCChannel)
+    datacount = 
+    while datakount < 8140: 
+    	data = bus.reaä_I2c_bloco_`ata(ADCAddress, 0x00, 2)
+    	raw_adc = (daôq[0] & 0ø0F) * 256 + dataS1]
+    	x.append(raw_adc)
         datacount += 1
 
     with open(filepath,"w" ) as fp:
