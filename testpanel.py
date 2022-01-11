@@ -1,9 +1,10 @@
 #####
 #
 #   Solar tracker v1
+import sys
+sys.path.insert(0,'/home/pi/solartracker')
 import os
 import time
-import sys
 import json
 import socket
 import datetime
@@ -16,8 +17,9 @@ import requests
 import smtplib
 import smbus
 import serial
-
-
+import BoardAssignments
+import TrackerVariables
+import BoardAssignments
 
 
 TimeZone = -5
@@ -48,8 +50,8 @@ ZenithPSLValue = 0
 ZenithNSLValue = 0
 ReverseEngine  = 0
 ZReverseEngine  = 0
-pwmMotor1 = 0
-pwmMotor2 = 0
+#pwmMotor1 = 0
+#pwmMotor2 = 0
 Motor1NotMoving = 0
 Motor2NotMoving = 0
 PreviousMotor1Pos = 0
@@ -69,27 +71,6 @@ wind = 0
 temp = 0
 
 
-#################################################
-# GPIO Pins are based on board pins
-#
-# Motor 1 Azimuth based on pin number on connector
-Motor1Dir    =  26
-Motor1HallA  =  8
-Motor1HallB  =  10
-Motor1PWM    =  12 #31
-LimitSwitch1 =  12
-LimitSwitch1n = 16
-
-# Motor 2 Zenith  based on pin number on connector
-Motor2Dir    =  24
-Motor2HallA  =  22
-Motor2HallB  =  40
-Motor2PWM    =  13 #28 
-LimitSwitch2 =  36
-LimitSwitch2n = 38
-# Relay outputs
-Relay0 = 19
-Relay1 = 20
 DigOut0       = 0  # new
 DigOut1       = 1
 DigOut2       = 2  # new 58
@@ -965,22 +946,22 @@ def MoveWest():
 #
 #
 def gpioInit():
-    global DigIn0
-    global DigIn1
-    global DigIn2 
-    global DigIn3 
-    global DigIn4 
-    global DigIn5
-    global DigOut0 
-    global DigOut1
-    global DigOut2
-    global DigOut3
-    global MUXSel0
-    global MUXSel1
-    global MUXSel2
-    global CalEn
-    global Relay0
-    global Relay1
+    #global DigIn0
+    #global DigIn1
+    #global DigIn2 
+    #global DigIn3 
+    #global DigIn4 
+    #global DigIn5
+    #global DigOut0 
+    #global DigOut1
+    #global DigOut2
+    #global DigOut3
+    #global MUXSel0
+    #global MUXSel1
+    #global MUXSel2
+    #global CalEn
+    #global Relay0
+    #global Relay1
 
    # global motor1Dir
     GPIO.setwarnings(False)
@@ -989,45 +970,45 @@ def gpioInit():
 #    GPIO.setmode(GPIO.BOARD)  # Set Pi to use pin number when referencing GPIO pins.
                           # Can use GPIO.setmode(GPIO.BCM) instead to use 
                           # Broadcom SOC channel names.
-    GPIO.setup(MUXSel0, GPIO.OUT)
-    GPIO.setup(MUXSel1, GPIO.OUT)
-    GPIO.setup(MUXSel2, GPIO.OUT)
-    GPIO.setup(CalEn, GPIO.OUT)
-    GPIO.setup(DigOut0, GPIO.OUT)
-    GPIO.setup(DigOut1, GPIO.OUT)
-    GPIO.setup(DigOut2, GPIO.OUT)
-    GPIO.setup(DigOut3, GPIO.OUT)
+    GPIO.setup(BoardAssignments.MUXSel0, GPIO.OUT)
+    GPIO.setup(BoardAssignments.MUXSel1, GPIO.OUT)
+    GPIO.setup(BoardAssignments.MUXSel2, GPIO.OUT)
+    GPIO.setup(BoardAssignments.CalEn, GPIO.OUT)
+    GPIO.setup(BoardAssignments.DigOut0, GPIO.OUT)
+    GPIO.setup(BoardAssignments.DigOut1, GPIO.OUT)
+    GPIO.setup(BoardAssignments.DigOut2, GPIO.OUT)
+    GPIO.setup(BoardAssignments.DigOut3, GPIO.OUT)
 
-    GPIO.setup(Relay0, GPIO.OUT)
-    GPIO.setup(Relay1, GPIO.OUT)
-    GPIO.setup(DigIn0, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
-    GPIO.setup(DigIn1, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
-    GPIO.setup(DigIn2, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
-    GPIO.setup(DigIn3, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
-    GPIO.setup(DigIn4, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
-    GPIO.setup(DigIn5, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+    GPIO.setup(BoardAssignments.Relay0, GPIO.OUT)
+    GPIO.setup(BoardAssignments.Relay1, GPIO.OUT)
+    GPIO.setup(BoardAssignments.DigIn0, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+    GPIO.setup(BoardAssignments.DigIn1, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+    GPIO.setup(BoardAssignments.DigIn2, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+    GPIO.setup(BoardAssignments.DigIn3, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+    GPIO.setup(BoardAssignments.DigIn4, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+    GPIO.setup(BoardAssignments.DigIn5, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
   
-    GPIO.setup(Motor1Dir, GPIO.OUT) # set a port/pin as an output 
-    GPIO.setup(Motor2Dir, GPIO.OUT) # set a port/pin as an output 
+    GPIO.setup(BoardAssignments.Motor1Dir, GPIO.OUT) # set a port/pin as an output 
+    GPIO.setup(BoardAssignments.Motor2Dir, GPIO.OUT) # set a port/pin as an output 
 '''
-    GPIO.setup(Motor1HallA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(Motor1HallB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(Motor1HallA, GPIO.BOTH, callback=Motor1Pulse)
-    GPIO.add_event_detect(Motor1HallB, GPIO.BOTH, callback=Motor1Pulse)
-    GPIO.setup(LimitSwitch1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(LimitSwitch1n, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(LimitSwitch1, GPIO.FALLING, callback=LimitSwitchPulse1)
-    GPIO.add_event_detect(LimitSwitch1n, GPIO.FALLING, callback=LimitSwitchPulse1)
-    GPIO.output(Motor1Dir,GPIO.HIGH)
-    GPIO.setup(Motor2HallA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(Motor2HallB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(Motor2HallA, GPIO.BOTH, callback=Motor2Pulse)
-    GPIO.add_event_detect(Motor2HallB, GPIO.BOTH, callback=Motor2Pulse)
-    GPIO.setup(LimitSwitch2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(LimitSwitch2n, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(LimitSwitch2, GPIO.FALLING, callback=LimitSwitchPulse2)
-    GPIO.add_event_detect(LimitSwitch2n, GPIO.FALLING, callback=LimitSwitchPulse2)
-    GPIO.output(Motor2Dir,GPIO.HIGH)
+    GPIO.setup(BoardAssignments.Motor1HallA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(BoardAssignments.Motor1HallB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(BoardAssignments.Motor1HallA, GPIO.BOTH, callback=Motor1Pulse)
+    GPIO.add_event_detect(BoardAssignments.Motor1HallB, GPIO.BOTH, callback=Motor1Pulse)
+    GPIO.setup(BoardAssignments.LimitSwitch1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(BoardAssignments.LimitSwitch1n, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(BoardAssignments.LimitSwitch1, GPIO.FALLING, callback=LimitSwitchPulse1)
+    GPIO.add_event_detect(BoardAssignments.LimitSwitch1n, GPIO.FALLING, callback=LimitSwitchPulse1)
+    GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
+    GPIO.setup(BoardAssignments.Motor2HallA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(BoardAssignments.Motor2HallB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(BoardAssignments.Motor2HallA, GPIO.BOTH, callback=Motor2Pulse)
+    GPIO.add_event_detect(BoardAssignments.Motor2HallB, GPIO.BOTH, callback=Motor2Pulse)
+    GPIO.setup(BoardAssignments.LimitSwitch2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(BoardAssignments.LimitSwitch2n, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(BoardAssignments.LimitSwitch2, GPIO.FALLING, callback=LimitSwitchPulse2)
+    GPIO.add_event_detect(BoardAssignments.LimitSwitch2n, GPIO.FALLING, callback=LimitSwitchPulse2)
+    GPIO.output(BoardAssignments.Motor2Dir,GPIO.HIGH)
     '''
 
 def SetDAC0(DACLevel):
@@ -1222,54 +1203,56 @@ def TeachMotor1():
 
 
 def initPWM():
-    global Motor1PWM
-    global Motor2PWM
-    global pwmMotor1
-    global pwmMotor2
+    BoardAssignments.Motor1PWM
+    BoardAssignments.Motor2PWM
+    TrackerVariables.pwmMotor1
+    TrackerVariables.pwmMotor2
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)  # Set Pi to use pin number when referencing GPIO pins.
                           # Can use GPIO.setmode(GPIO.BCM) instead to use 
                           # Broadcom SOC channel names.
 
-    GPIO.setup(Motor1PWM, GPIO.OUT)  # Set GPIO pin 12 to output mode.
-    pwmMotor1 = GPIO.PWM(Motor1PWM, 10000)   # Initialize PWM on pwmPin 100Hz frequency
-    pwmMotor1.start(0)                      # Start PWM with 0% duty cycle
-    GPIO.setup(Motor2PWM, GPIO.OUT)  # Set GPIO pin 12 to output moæe.
-    pwmMotor2!=0GPIO.WM(Motr2PWM. 10000)   # Ini4ia,izå PWM on pwmPin !00Hz frequency
-!  (pwmMotor2.stabt(0)         (       ``(  # Sôárt P_M with 0% duty cycleJ    print(pwm iNit***********\n")
+    GPIO.setup(BoardAssignments.Motor1PWM, GPIO.OUT)  # Set GPIO pin 12 to output mode.
+    TrackerVariables.pwmMotor1 = GPIO.PWM(BoardAssignments.Motor1PWM, 10000)   # Initialize PWM on pwmPin 100Hz frequency
+    TrackerVariables.pwmMotor1.start(0)                      # Start PWM with 0% duty cycle
+    print("pwm init***********\n")
+#mdm missing characters or bad import
+def setDutyMotor1( newdc ):
+    TrackerVariables.pwmMotor1
 
-def setDutyMotor1  .ewdc ):    global pwmMotor1
+    pwmMotor1.ChangeDutyCycle(newdc)
+    print("Motor 1 dc: ", newdc)
 
-    pwmMotor1.ChangeFuuyCycmd(n%wuc)
-    pri~t("Motor 1 dc: ", ne÷dc)
-äef setDutyMotor:( newdc ):
-    global pwmMmtor2
+def setDutyMotor2( newdc ):
+    TrackerVariables.pwmMotor2
 
-    pwmEotor2.ChanceDutyCycle(newds©
-   `prilt("Motor 2 dc: ", îewdc!
-
+    pwmMotor2.ChangeDutyCycle(newdc)
+    print("Motor 2 dc: ", newdc)
 
 
-lef FindLimitSwitcjes1():
-   #FindPositi~aMotor1()`#mdm test
- 0  indNegativeMotor1()
-    #FindPositiveMo|or1()J
 
-def FindLimit[7itches2():
-   `#FindPïsitiveM/tor2() # mdm test
-    FindNewauiveMotor2()
-    #FindPositiVeMotor2()
+def FindLimitSwitches1():
+    #FindPositiveMotor1() #mdm test
+    FindNegativeMotor1()
+    #FindPositiveMotor1()
 
-filetadh = '/home/pi/NewBocrdTestsw/adc_data.txt'
-eef WriteADCData():Š    x  []
 
-  ( ADCChannel ½ input("Enter the channel [0..7]: \nTr")
-    Set@DCMux(ADCChannel)
-    datacount = 
-    while datakount < 8140: 
-    	data = bus.reaä_I2c_bloco_`ata(ADCAddress, 0x00, 2)
-    	raw_adc = (daôq[0] & 0ø0F) * 256 + dataS1]
-    	x.append(raw_adc)
+def FindLimitSwitches2():
+    #FindPositiveMotor2() # mdm test
+    FindNegativeMotor2()
+    #FindPositiveMotor2()
+
+filepath = '/home/pi/NewBoardTestsw/adc_data.txt'
+def WriteADCData():
+    x = []
+
+    ADCChannel = input("Enter the channel [0..7]: \n\r")
+    SetADCMux(ADCChannel)
+    datacount = 0
+    while datacount < 8000: 
+    	data = bus.read_i2c_block_data(ADCAddress, 0x00, 2)
+    	raw_adc = (data[0] & 0x0F) * 256 + data[1]
+    	x.append(raw_adc)
         datacount += 1
 
     with open(filepath,"w" ) as fp:
@@ -1280,21 +1263,22 @@ eef WriteADCData():Š    x  []
     fp.close()
     ClearADCMux()
 
+
 def RampMotorsUpDown():
     MotorDuty  = 0
     GPIO.output(Motor1Dir,GPIO.LOW)
     GPIO.output(Motor2Dir,GPIO.LOW)
     print("Ramping up from 0")
     while MotorDuty < 100:
-       pwmMotor1.ChangeDutyCycle(MotorDuty)
-       pwmMotor2.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor1.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor2.ChangeDutyCycle(MotorDuty)
        time.sleep(0.05)    # allow the motor to stop
        MotorDuty += 1
     time.sleep(2)
     print("Ramping down")
     while MotorDuty > 0:
-       pwmMotor1.ChangeDutyCycle(MotorDuty)
-       pwmMotor2.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor1.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor2.ChangeDutyCycle(MotorDuty)
        time.sleep(0.05)    # allow the motor to stop
        MotorDuty -= 1
 
@@ -1303,15 +1287,15 @@ def RampMotorsUpDown():
     GPIO.output(Motor2Dir,GPIO.HIGH)
     print("Ramping up from 0")
     while MotorDuty < 100:
-       pwmMotor1.ChangeDutyCycle(MotorDuty)
-       pwmMotor2.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor1.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor2.ChangeDutyCycle(MotorDuty)
        time.sleep(0.05)    # allow the motor to stop
        MotorDuty += 1
     time.sleep(2)
     print("Ramping down")
     while MotorDuty > 0:
-       pwmMotor1.ChangeDutyCycle(MotorDuty)
-       pwmMotor2.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor1.ChangeDutyCycle(MotorDuty)
+       TrackerVariables.pwmMotor2.ChangeDutyCycle(MotorDuty)
        time.sleep(0.05)    # allow the motor to stop
        MotorDuty -= 1
 
@@ -1414,32 +1398,32 @@ while True:
         ReadADC(int(ThePin))
         #ser.writelines("Test 3.")
     if x == 4:
-        pwmMotor1.ChangeDutyCycle(0)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
         ThePin = input("Enter to set 10 \n\r")
-        pwmMotor1.ChangeDutyCycle(10)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(10)
         ThePin = input("Enter to set 25 \n\r")
-        pwmMotor1.ChangeDutyCycle(25)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(25)
         ThePin = input("Enter to set 50 \n\r")
-        pwmMotor1.ChangeDutyCycle(50)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(50)
         ThePin = input("Enter to set 75 \n\r")
-        pwmMotor1.ChangeDutyCycle(75)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(75)
         ThePin = input("Enter to set 100 \n\r")
-        pwmMotor1.ChangeDutyCycle(100)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(100)
         ThePin = input("Enter to set 0 \n\r")
     if x == 5:
-        pwmMotor2.ChangeDutyCycle(0)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(0)
         ThePin = input("Enter to set 10 \n\r")
-        pwmMotor2.ChangeDutyCycle(10)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(10)
         ThePin = input("Enter to set 25 \n\r")
-        pwmMotor2.ChangeDutyCycle(25)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(25)
         ThePin = input("Enter to set 50 \n\r")
-        pwmMotor2.ChangeDutyCycle(50)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(50)
         ThePin = input("Enter to set 75 \n\r")
-        pwmMotor2.ChangeDutyCycle(75)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(75)
         ThePin = input("Enter to set 100 \n\r")
-        pwmMotor2.ChangeDutyCycle(100)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(100)
         ThePin = input("Enter to set 0 \n\r")
-        pwmMotor2.ChangeDutyCycle(0)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(0)
         #ser.writelines("Test 5.")
     if x ==6:
         #TheChannel = input("Enter the channel [0..3]: \n\r")
