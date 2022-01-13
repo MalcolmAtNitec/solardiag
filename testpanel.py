@@ -19,7 +19,6 @@ import smbus
 import serial
 import BoardAssignments
 import TrackerVariables
-import BoardAssignments
 
 
 TimeZone = -5
@@ -291,7 +290,7 @@ def motor1_thread(name):
     FindLimitSwitches1()
     MovingMotor1 = 0
     print("Limits Motor 1: ", Motor1Negative, Motor1Positive)
-    SetMotorDirection1(SolarConstants.MOTOR_STOP)
+    MotorControl.SetMotorDirection1(SolarConstants.MOTOR_STOP)
 # mdm MoveToPosition(MotorEastTick)
 # mdm time.sleep(20)
 # mdm MoveToPosition(270)
@@ -1215,7 +1214,11 @@ def initPWM():
     GPIO.setup(BoardAssignments.Motor1PWM, GPIO.OUT)  # Set GPIO pin 12 to output mode.
     TrackerVariables.pwmMotor1 = GPIO.PWM(BoardAssignments.Motor1PWM, 10000)   # Initialize PWM on pwmPin 100Hz frequency
     TrackerVariables.pwmMotor1.start(0)                      # Start PWM with 0% duty cycle
+    GPIO.setup(BoardAssignments.Motor2PWM, GPIO.OUT)  # Set GPIO pin 12 to output mode.
+    TrackerVariables.pwmMotor2 = GPIO.PWM(BoardAssignments.Motor2PWM, 10000)   # Initialize PWM on pwmPin 100Hz frequency
+    TrackerVariables.pwmMotor2.start(0)                      # Start PWM with 0% duty cycle
     print("pwm init***********\n")
+
 #mdm missing characters or bad import
 def setDutyMotor1( newdc ):
     TrackerVariables.pwmMotor1
@@ -1431,24 +1434,32 @@ while True:
         SetDAC(TheVoltage,TheVoltage)
     if x == 7:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
-        GPIO.output(Motor1Dir,GPIO.LOW)
+        GPIO.output(BoardAssignments.Motor1Dir,GPIO.LOW)
         time.sleep(1)    # allow the motor to stop
-        pwmMotor1.ChangeDutyCycle(DutyCycle)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(DutyCycle)
+        time.sleep(1)    # allow the motor to stop
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
     if x == 8:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
-        GPIO.output(Motor1Dir,GPIO.HIGH)
+        GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
         time.sleep(1)    # allow the motor to stop
-        pwmMotor1.ChangeDutyCycle(DutyCycle)
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(DutyCycle)
+        time.sleep(1)    # allow the motor to stop
+        TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
-        GPIO.output(Motor2Dir,GPIO.LOW)
+        GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
         time.sleep(1)    # allow the motor to stop
-        pwmMotor2.ChangeDutyCycle(DutyCycle)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(DutyCycle)
+        time.sleep(1)    # allow the motor to stop
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(0)
     if x == 10:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
-        GPIO.output(Motor2Dir,GPIO.HIGH)
+        GPIO.output(BoardAssignments.Motor2Dir,GPIO.HIGH)
         time.sleep(1)    # allow the motor to stop
-        pwmMotor2.ChangeDutyCycle(DutyCycle)
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(DutyCycle)
+        time.sleep(1)    # allow the motor to stop
+        TrackerVariables.pwmMotor2.ChangeDutyCycle(0)
     if x == 11:
         GPIO.output(Relay0,GPIO.HIGH)
         time.sleep(10)    # allow the motor to stop
