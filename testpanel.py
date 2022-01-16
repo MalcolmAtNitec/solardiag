@@ -20,7 +20,7 @@ import smbus
 import serial
 import BoardAssignments
 import TrackerVariables
-
+import MotorControl
 
 TimeZone = -5
 AParkPosition = 0
@@ -963,6 +963,7 @@ def gpioInit():
     #global Relay0
     #global Relay1
 
+    print("Setting GPIOs")
    # global motor1Dir
     GPIO.setwarnings(False)
 
@@ -1338,17 +1339,23 @@ def WriteTheMenu():
 # Main function
 #####################################################################################
 
-initPWM()
-gpioInit()
+MotorControl.initPWM()
+#gpioInit()
+MotorControl.gpioMotor0Init()
+MotorControl.gpioMotor1Init()
+
+print("Here we are1")
 bus = smbus.SMBus(0)    # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
 #setDutyMotor1(0)  
 #setDutyMotor2(0)  
+print("Here we are2")
 Motor1Pos = 0
 Motor2Pos = 0
 ### 
 # Start the motor control threads
-'''
-#Motor1Thread = threading.Thread(target=motor1_thread, args=(1,))
+
+print("Here we are3\n\n\n")
+#Motor1Thread = threading.Thread(target=MotorControl.motor1_thread, args=(1,))
 #Motor1Thread.daemon = True
 #Motor1Thread.start()
 #time.sleep(10)
@@ -1357,12 +1364,13 @@ Motor2Pos = 0
 #    time.sleep(10)
 #print("done find home 1")
 
-#Motor2Thread = threading.Thread(target=motor2_thread, args=(1,))
-#Motor2Thread.daemon = True
-#Motor2Thread.start()
+print("Motor thread 2 start")
+Motor2Thread = threading.Thread(target=MotorControl.motor2_thread, args=(1,))
+Motor2Thread.daemon = True
+Motor2Thread.start()
 #time.sleep(10) # time to let thread start
-#print("Motor threads are running")
-'''
+print("Motor threads are running")
+
 #ser = serial.Serial(
 #        port='/dev/ttyS0', #AMA0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
 #        baudrate = 119200,
