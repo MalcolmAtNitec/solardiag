@@ -1445,30 +1445,31 @@ while True:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor1Dir,GPIO.LOW)
         time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor1.ChangeDutyCycle(DutyCycle)
+        MotorControl.pwmMotor1.ChangeDutyCycle(DutyCycle)
         time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
+        MotorControl.pwmMotor1.ChangeDutyCycle(0)
     if x == 8:
-        DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
-        GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
-        time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor1.ChangeDutyCycle(DutyCycle)
-        time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
+        #DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
+        #GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
+        #time.sleep(1)    # allow the motor to stop
+        #MotorControl.pwmMotor1.ChangeDutyCycle(DutyCycle)
+        #time.sleep(1)    # allow the motor to stop
+        #MotorControl.pwmMotor1.ChangeDutyCycle(0)
+        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
         time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor2.ChangeDutyCycle(DutyCycle)
+        MotorControl.pwmMotor2.ChangeDutyCycle(DutyCycle)
         time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor2.ChangeDutyCycle(0)
+        MotorControl.pwmMotor2.ChangeDutyCycle(0)
     if x == 10:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.HIGH)
         time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor2.ChangeDutyCycle(DutyCycle)
+        MotorControl.pwmMotor2.ChangeDutyCycle(DutyCycle)
         time.sleep(1)    # allow the motor to stop
-        TrackerVariables.pwmMotor2.ChangeDutyCycle(0)
+        MotorControl.pwmMotor2.ChangeDutyCycle(0)
     if x == 11:
         GPIO.output(Relay0,GPIO.HIGH)
         time.sleep(10)    # allow the motor to stop
