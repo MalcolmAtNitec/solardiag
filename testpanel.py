@@ -999,7 +999,7 @@ def gpioInit():
     GPIO.setup(BoardAssignments.LimitSwitch1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(BoardAssignments.LimitSwitch1n, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(BoardAssignments.LimitSwitch1, GPIO.FALLING, callback=LimitSwitchPulse1)
-    GPIO.add_event_detect(BoardAssignments.LimitSwitch1n, GPIO.FALLING, callback=LimitSwitchPulse1)
+#    GPIO.add_event_detect(BoardAssignments.LimitSwitch1n, GPIO.FALLING, callback=LimitSwitchPulse1)
     GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
     GPIO.setup(BoardAssignments.Motor2HallA, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(BoardAssignments.Motor2HallB, GPIO.IN, pull_up_down=GPIO.PUD_UP)
