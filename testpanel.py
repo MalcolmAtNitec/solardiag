@@ -1355,9 +1355,9 @@ Motor2Pos = 0
 # Start the motor control threads
 
 print("Here we are3\n\n\n")
-#Motor1Thread = threading.Thread(target=MotorControl.motor1_thread, args=(1,))
-#Motor1Thread.daemon = True
-#Motor1Thread.start()
+Motor1Thread = threading.Thread(target=MotorControl.motor1_thread, args=(1,))
+Motor1Thread.daemon = True
+Motor1Thread.start()
 #time.sleep(10)
 #print("Waiting for find home 1")
 #while Motor1WaitFlag == 1:
@@ -1455,7 +1455,7 @@ while True:
         #MotorControl.pwmMotor1.ChangeDutyCycle(DutyCycle)
         #time.sleep(1)    # allow the motor to stop
         #MotorControl.pwmMotor1.ChangeDutyCycle(0)
-        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
+        MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
