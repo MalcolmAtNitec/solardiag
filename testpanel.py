@@ -21,6 +21,7 @@ import serial
 import BoardAssignments
 import TrackerVariables
 import MotorControl
+import ConfigFile
 
 TimeZone = -5
 AParkPosition = 0
@@ -121,6 +122,14 @@ Limit2PosReached = 0
 Limit2NegReached = 0
 Motor2State = 0
 StepsToStop2 = 0
+
+def setReverseParameters(AzReverse, ZeReverse):
+    global ZReverseEngine
+    global ReverseEngine
+    
+    ZReverseEngine = ZeReverse
+    ReverseEngine = AzReverse
+
 
 """
 Set the direction and speed of motor 1
@@ -1338,6 +1347,9 @@ def WriteTheMenu():
 #####################################################################################
 # Main function
 #####################################################################################
+
+ConfigFile.AssignAzimuthParametrs()
+ConfigFile.AssignZenithParametrs()
 
 MotorControl.initPWM()
 #gpioInit()
