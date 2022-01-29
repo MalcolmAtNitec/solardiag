@@ -1467,10 +1467,11 @@ while True:
         #MotorControl.pwmMotor1.ChangeDutyCycle(DutyCycle)
         #time.sleep(1)    # allow the motor to stop
         #MotorControl.pwmMotor1.ChangeDutyCycle(0)
-        MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
+        #MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
         #MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, -200,0)
         #time.sleep(15)
-        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
+        #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
+        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, -200,0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
