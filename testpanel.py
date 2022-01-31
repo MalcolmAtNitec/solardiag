@@ -1380,7 +1380,7 @@ print("Motor thread 2 start")
 Motor2Thread = threading.Thread(target=MotorControl.motor2_thread, args=(1,))
 Motor2Thread.daemon = True
 Motor2Thread.start()
-#time.sleep(10) # time to let thread start
+time.sleep(2) # time to let thread start
 print("Motor threads are running")
 
 #ser = serial.Serial(
@@ -1391,8 +1391,9 @@ print("Motor threads are running")
 #        bytesize=serial.EIGHTBITS,
 #        timeout=1
 #)
-
-
+print(ConfigFile.AzimuthReverse, ConfigFile.ZenithReverse)
+MotorControl.SetEngineParameters(ConfigFile.AzimuthReverse, ConfigFile.ZenithReverse)
+print("AZ", ConfigFile.AzimuthReverse, "ZE", ConfigFile.ZenithReverse)
 #print(ser)
 
 while True:
@@ -1470,8 +1471,8 @@ while True:
         #MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
         #MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, -200,0)
         #time.sleep(15)
-        #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
-        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, -200,0)
+        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
+        #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, -200,0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
