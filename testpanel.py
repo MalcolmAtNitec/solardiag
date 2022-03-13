@@ -3,7 +3,8 @@
 #
 #   Solar tracker v1
 import sys
-sys.path.insert(0,'/home/pi/solartracker')
+#sys.path.insert(0,'/home/pi/solartracker')
+sys.path.insert(0,'/home/pi/trackerFeb2022/solartracker')
 import os
 import time
 import json
@@ -70,6 +71,7 @@ ParkWindSpeed = 0
 NightPosition = 0
 wind = 0
 temp = 0
+EngineStatus = 0
 
 
 DigOut0       = 0  # new
@@ -1342,7 +1344,9 @@ def WriteTheMenu():
     print(b' 14. Capture ADC to file.\r\n')
     print(b' 15. Ramp DAC.\r\n')
     print(b' 16. Ramp Motors Up and Down.\r\n')
-    print(b' 17. Exit.\r\n')
+    print(b' 17. Update database parameters.\r\n')
+    print(b' 18. Get Motor Status r\n')
+    print(b' 19. Exit.\r\n')
 
 #####################################################################################
 # Main function
@@ -1466,12 +1470,24 @@ while True:
         #GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
         #time.sleep(1)    # allow the motor to stop
         #MotorControl.pwmMotor1.ChangeDutyCycle(DutyCycle)
+        TheDirection = input("Enter the direction 0: clockwise 1: counter clockwise: \n\r")
+        TheSteps = input("Enter the number of steps [-300..300]: \n\r")
+        TheMotor = input("Enter 0 for motor 1 and 1 for motor 2: \n\r")
+
         #time.sleep(1)    # allow the motor to stop
         #MotorControl.pwmMotor1.ChangeDutyCycle(0)
-        #MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, 200,0)
-        #MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, -200,0)
+        if TheMotor == 0:
+                if TheDirection == 0:
+        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
+                else:
+        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
+        else:
+                if TheDirection == 0:
+        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
+                else:
+        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
         #time.sleep(15)
-        MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
+        #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
         #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, -200,0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
@@ -1504,7 +1520,17 @@ while True:
         MaxMinDAC()
     if x == 16:
         RampMotorsUpDown()
-    if x == 17: #'q':
+    if x == 17:
+        ConfigFile.AssignAzimuthParametrs()
+        ConfigFile.AssignZenithParametrs()
+        print(ConfigFile.AzimuthReverse, ConfigFile.ZenithReverse)
+        MotorControl.SetEngineParameters(ConfigFile.AzimuthReverse, ConfigFile.ZenithReverse)
+    if x == 18:
+        EngineStstau = MotorControl.GetEngine1Status()  
+        print(EngineStatus)
+        EngineStstau = MotorControl.GetEngine2Status()  
+        print(EngineStatus)
+    if x == 19: #'q':
         sys.exit()
 
     print(x)
