@@ -3,7 +3,6 @@
 #
 #   Solar tracker v1
 import sys
-#sys.path.insert(0,'/home/pi/solartracker')
 sys.path.insert(0,'/home/pi/trackerFeb2022/solartracker')
 import os
 import time
@@ -23,6 +22,7 @@ import BoardAssignments
 import TrackerVariables
 import MotorControl
 import ConfigFile
+import SolarConstants
 
 TimeZone = -5
 AParkPosition = 0
@@ -1356,7 +1356,6 @@ ConfigFile.AssignAzimuthParametrs()
 ConfigFile.AssignZenithParametrs()
 
 MotorControl.initPWM()
-#gpioInit()
 MotorControl.gpioMotor0Init()
 MotorControl.gpioMotor1Init()
 
@@ -1466,29 +1465,24 @@ while True:
         time.sleep(1)    # allow the motor to stop
         MotorControl.pwmMotor1.ChangeDutyCycle(0)
     if x == 8:
-        #DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
-        #GPIO.output(BoardAssignments.Motor1Dir,GPIO.HIGH)
-        #time.sleep(1)    # allow the motor to stop
-        #MotorControl.pwmMotor1.ChangeDutyCycle(DutyCycle)
-        TheDirection = input("Enter the direction 0: clockwise 1: counter clockwise: \n\r")
+        MotorControl.SetEngine1Pos(0) 
+        TheDirection = input("Enter the direction 0: East  1: West:\n\r")
         TheSteps = input("Enter the number of steps [-300..300]: \n\r")
-        TheMotor = input("Enter 0 for motor 1 and 1 for motor 2: \n\r")
+        TheMotor = input("Enter 0 for Azimuth (E-W) motor and 1 for Zenith (N-S) motor: \n\r")
+        TheDuty = input("Enter the duty cycle: \n\r")
 
         #time.sleep(1)    # allow the motor to stop
         #MotorControl.pwmMotor1.ChangeDutyCycle(0)
-        if TheMotor == 0:
-                if TheDirection == 0:
+        if TheMotor == SolarConstants.AzimuthMotor: #0:
+                if TheDirection == SolarConstants.AzimuthEast: #0:
         		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
                 else:
         		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
-        else:
+        else: # ZenithMotor
                 if TheDirection == 0:
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
                 else:
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
-        #time.sleep(15)
-        #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, 200,0)
-        #MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, -200,0)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)

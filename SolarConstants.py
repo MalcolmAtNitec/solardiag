@@ -1,6 +1,0 @@
-#Constants
-MOTOR_STOP = 0
-MOTOR_FORWARD = 2
-MOTOR_REVERSE = 1
-
-
