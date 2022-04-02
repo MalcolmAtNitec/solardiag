@@ -1465,20 +1465,24 @@ while True:
         time.sleep(1)    # allow the motor to stop
         MotorControl.pwmMotor1.ChangeDutyCycle(0)
     if x == 8:
-        MotorControl.SetEngine1Pos(0) 
-        TheDirection = input("Enter the direction 0: East  1: West:\n\r")
-        TheSteps = input("Enter the number of steps [-300..300]: \n\r")
         TheMotor = input("Enter 0 for Azimuth (E-W) motor and 1 for Zenith (N-S) motor: \n\r")
-        TheDuty = input("Enter the duty cycle: \n\r")
 
         #time.sleep(1)    # allow the motor to stop
         #MotorControl.pwmMotor1.ChangeDutyCycle(0)
         if TheMotor == SolarConstants.AzimuthMotor: #0:
+                TheDirection = input("Enter the direction 0: East  1: West:\n\r")
+                TheSteps = input("Enter the number of steps [-300..300]: \n\r")
+                TheDuty = input("Enter the duty cycle: \n\r")
                 if TheDirection == SolarConstants.AzimuthEast: #0:
+                        MotorControl.SetEngine1Pos(0) 
         		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
                 else:
+                        MotorControl.SetEngine1Pos(TheSteps * 2) 
         		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
         else: # ZenithMotor
+                TheDirection = input("Enter the direction 0: North  1: South:\n\r")
+                TheSteps = input("Enter the number of steps [-300..300]: \n\r")
+                TheDuty = input("Enter the duty cycle: \n\r")
                 if TheDirection == 0:
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
                 else:
