@@ -23,6 +23,7 @@ import TrackerVariables
 import MotorControl
 import ConfigFile
 import SolarConstants
+import Peripheral
 
 TimeZone = -5
 AParkPosition = 0
@@ -1355,6 +1356,8 @@ def WriteTheMenu():
 ConfigFile.AssignAzimuthParametrs()
 ConfigFile.AssignZenithParametrs()
 
+Peripheral.gpioPeripheralInit()
+
 MotorControl.initPWM()
 MotorControl.gpioMotor0Init()
 MotorControl.gpioMotor1Init()
@@ -1420,10 +1423,8 @@ while True:
         SetGPIOOutputs(ThePin, TheState) 
         
     if x ==3:
-        #ser.writelines("Enter the channel [0..3]: \n\r")
-        #ThePin = ser.read()
         ThePin = input("Enter the channel [0..15]: \n\r")
-        ReadADC(int(ThePin))
+        Peripheral.ReadADC(int(ThePin))
         #ser.writelines("Test 3.")
     if x == 4:
         TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
