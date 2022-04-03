@@ -1335,7 +1335,7 @@ def WriteTheMenu():
     print(b' 5. PWM1 steps.\r\n')
     print(b' 6. Set DAC channel.\r\n')
     print(b' 7. Set Motor0 forward.\r\n')
-    print(b' 8. Set Motor0 reverse.\r\n')
+    print(b' 8. Test Azimuth Motor0.\r\n')
     print(b' 9. Set Motor1 forward.\r\n')
     print(b' 10. Set Motor1 reverse.\r\n')
     print(b' 11. Set Relay0.\r\n')
@@ -1475,18 +1475,18 @@ while True:
                 TheDuty = input("Enter the duty cycle: \n\r")
                 if TheDirection == SolarConstants.AzimuthEast: #0:
                         MotorControl.SetEngine1Pos(0) 
-        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
+        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,TheDuty)
                 else:
                         MotorControl.SetEngine1Pos(TheSteps * 2) 
-        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
+        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,TheDuty)
         else: # ZenithMotor
                 TheDirection = input("Enter the direction 0: North  1: South:\n\r")
                 TheSteps = input("Enter the number of steps [-300..300]: \n\r")
                 TheDuty = input("Enter the duty cycle: \n\r")
                 if TheDirection == 0:
-        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,0)
+        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,TheDuty)
                 else:
-        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,0)
+        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,TheDuty)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
