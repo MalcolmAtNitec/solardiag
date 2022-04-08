@@ -1357,6 +1357,9 @@ ConfigFile.AssignAzimuthParametrs()
 ConfigFile.AssignZenithParametrs()
 
 Peripheral.gpioPeripheralInit()
+ADCThread = threading.Thread(target=Peripheral.ADC_thread, args=(1,))
+ADCThread.daemon = True
+ADCThread.start()
 
 MotorControl.initPWM()
 MotorControl.gpioMotor0Init()
@@ -1425,6 +1428,8 @@ while True:
     if x ==3:
         ThePin = input("Enter the channel [0..15]: \n\r")
         Peripheral.ReadADC(int(ThePin))
+        ADCInfo = Periperal.GetADCReading()
+        #print(ADCInfo[0], ADCInfo[1])
         #ser.writelines("Test 3.")
     if x == 4:
         TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
@@ -1484,9 +1489,10 @@ while True:
                 TheDirection = input("Enter the direction 0: North  1: South:\n\r")
                 TheSteps = input("Enter the number of steps [-300..300]: \n\r")
                 TheDuty = input("Enter the duty cycle: \n\r")
-                if TheDirection == 0:
+                if TheDirection == 1: #South
+                        MotorControl.SetEngine1Pos(TheSteps * 2) 
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,TheDuty)
-                else:
+                else: # North
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,TheDuty)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
