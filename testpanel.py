@@ -1356,10 +1356,10 @@ def WriteTheMenu():
 ConfigFile.AssignAzimuthParametrs()
 ConfigFile.AssignZenithParametrs()
 
-Peripheral.gpioPeripheralInit()
-ADCThread = threading.Thread(target=Peripheral.ADC_thread, args=(1,))
-ADCThread.daemon = True
-ADCThread.start()
+#Peripheral.gpioPeripheralInit()
+#ADCThread = threading.Thread(target=Peripheral.ADC_thread, args=(1,))
+#ADCThread.daemon = True
+#ADCThread.start()
 
 MotorControl.initPWM()
 MotorControl.gpioMotor0Init()
@@ -1427,9 +1427,9 @@ while True:
         
     if x ==3:
         ThePin = input("Enter the channel [0..15]: \n\r")
-        Peripheral.ReadADC(int(ThePin))
-        ADCInfo = Periperal.GetADCReading()
-        #print(ADCInfo[0], ADCInfo[1])
+        #Peripheral.ReadADC(int(ThePin))
+        ADCInfo = Peripheral.GetADCReading()
+        print(ADCInfo[0], ADCInfo[1])
         #ser.writelines("Test 3.")
     if x == 4:
         TrackerVariables.pwmMotor1.ChangeDutyCycle(0)
@@ -1473,8 +1473,6 @@ while True:
     if x == 8:
         TheMotor = input("Enter 0 for Azimuth (E-W) motor and 1 for Zenith (N-S) motor: \n\r")
 
-        #time.sleep(1)    # allow the motor to stop
-        #MotorControl.pwmMotor1.ChangeDutyCycle(0)
         if TheMotor == SolarConstants.AzimuthMotor: #0:
                 TheDirection = input("Enter the direction 0: East  1: West:\n\r")
                 TheSteps = input("Enter the number of steps [-300..300]: \n\r")
@@ -1490,9 +1488,10 @@ while True:
                 TheSteps = input("Enter the number of steps [-300..300]: \n\r")
                 TheDuty = input("Enter the duty cycle: \n\r")
                 if TheDirection == 1: #South
-                        MotorControl.SetEngine1Pos(TheSteps * 2) 
+                        MotorControl.SetEngine2Pos(0) 
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,TheDuty)
                 else: # North
+                        MotorControl.SetEngine2Pos(TheSteps * 2) 
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,TheDuty)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
