@@ -1355,6 +1355,7 @@ def WriteTheMenu():
 
 ConfigFile.AssignAzimuthParametrs()
 ConfigFile.AssignZenithParametrs()
+ConfigFile.AssignTrackerParametrs()
 
 #Peripheral.gpioPeripheralInit()
 #ADCThread = threading.Thread(target=Peripheral.ADC_thread, args=(1,))
@@ -1475,24 +1476,24 @@ while True:
 
         if TheMotor == SolarConstants.AzimuthMotor: #0:
                 TheDirection = input("Enter the direction 0: East  1: West:\n\r")
-                TheSteps = input("Enter the number of steps [-300..300]: \n\r")
+                TheSteps = input("Enter the number of steps [0..300]: \n\r")
                 TheDuty = input("Enter the duty cycle: \n\r")
-                if TheDirection == SolarConstants.AzimuthEast: #0:
-                        MotorControl.SetEngine1Pos(0) 
-        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,TheDuty)
-                else:
-                        MotorControl.SetEngine1Pos(TheSteps * 2) 
+                if TheDirection == SolarConstants.AzimuthEast: 
+                        MotorControl.SetEngine1Pos(0) #TheSteps * -2) 
         		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,TheDuty)
+                else: # Azimuth west
+                        MotorControl.SetEngine1Pos(0) 
+        		MotorControl.MoveMotor1StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps * -1,TheDuty)
         else: # ZenithMotor
                 TheDirection = input("Enter the direction 0: North  1: South:\n\r")
-                TheSteps = input("Enter the number of steps [-300..300]: \n\r")
+                TheSteps = input("Enter the number of steps [0..300]: \n\r")
                 TheDuty = input("Enter the duty cycle: \n\r")
                 if TheDirection == 1: #South
-                        MotorControl.SetEngine2Pos(0) 
+                        MotorControl.SetEngine2Pos(TheSteps) 
         		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_FORWARD, TheSteps,TheDuty)
                 else: # North
-                        MotorControl.SetEngine2Pos(TheSteps * 2) 
-        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps,TheDuty)
+                        MotorControl.SetEngine2Pos(TheSteps * -2) 
+        		MotorControl.MoveMotor2StepsDirection(SolarConstants.MOTOR_REVERSE, TheSteps * -1,TheDuty)
     if x == 9:
         DutyCycle = input("Enter the duty cycle [0..100]: \n\r")
         GPIO.output(BoardAssignments.Motor2Dir,GPIO.LOW)
