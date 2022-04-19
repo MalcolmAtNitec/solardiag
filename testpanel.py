@@ -1357,6 +1357,8 @@ ConfigFile.AssignAzimuthParametrs()
 ConfigFile.AssignZenithParametrs()
 ConfigFile.AssignTrackerParametrs()
 
+print("AzimuthRev", ConfigFile.AzimuthReverse, "Zenith Rev", ConfigFile.ZenithReverse)
+
 #Peripheral.gpioPeripheralInit()
 #ADCThread = threading.Thread(target=Peripheral.ADC_thread, args=(1,))
 #ADCThread.daemon = True
